@@ -44,8 +44,8 @@
 	// globals
 	// --------------------------------------------------------------
 	
-	window.HDR2D_BLEND_NONE = 0;
-	window.HDR2D_BLEND_ADD = 1;
+	window.HDR2D_BLEND_NONE     = 0;
+	window.HDR2D_BLEND_ADD      = 1;
 	window.HDR2D_BLEND_SUBTRACT = 2;
 	
 	// data structures / fundamental types
@@ -67,9 +67,8 @@
 	// --------------------------------------------------------------
 		
 	HTMLCanvasElement.prototype.getContext = (function() {
-		var canvas = this;
 		var base = HTMLCanvasElement.prototype.getContext;
-	
+		
 		return function() {
 			if (arguments[0] !== 'hdr2d') {
 				return base.apply(this, arguments);
@@ -78,9 +77,10 @@
 			// setup
 			// -------------------------------------------------------
 
+			var canvas = this;
+			
 			var CANVAS_WIDTH   = canvas.width;
 			var CANVAS_HEIGHT  = canvas.height;
-			
 			var context2D      = base.apply(this, ['2d']);
 			var imageData2D    = context2D.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 			var imageData2DHDR = new ImageDataHDR(CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -88,7 +88,7 @@
 			var context = {
 				canvas: canvas,
 				globalAlpha: 1,
-				imageData: imageDataHDR,
+				imageData: imageData2DHDR,
 				range: {
 					r: {low: 0, high: 255},
 					g: {low: 0, high: 255},
@@ -213,12 +213,10 @@
 						ranges.push(context.range[k]);
 					}
 				}
-				
 				for (var r, i = 0, n = context.imageData.data.length; i < n; i++) {
-					r = context.range[i % 4];
-					imageData2D[i] = (context.imageData.data[i] - r.low) / (r.high - r.low) * 255;
+					r = ranges[i % 4];
+					imageData2D.data[i] = (context.imageData.data[i] - r.low) / (r.high - r.low) * 255;
 				}
-				
 				context2D.putImageData(imageData2D, 0, 0);
 			};
 			
@@ -226,4 +224,4 @@
 		};
 	})();
  	
-});
+})();
