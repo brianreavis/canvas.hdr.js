@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="stylesheet.css">
+		<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+		<script src="../canvas.hdr.js"></script>
+	</head>
+	<body>
+		<div id="wrapper">
+			<div class="lib">canvas.hdr.js</div>
+			<h1>HDR Levels</h1>
+			<p>This demo shows how channel levels can be adjusted very simply without modifying the pixel data.</p> 
+		
+			<div class="demo" id="demo-levels">
+				<script>
+				(function() {
+					var canvas = document.createElement('canvas');
+					canvas.width = 470;
+					canvas.height = 100;
+			
+					var context = canvas.getContext('hdr2d');
+					for (var i = 0, n = context.imageData.data.length; i < n; i++) {
+						context.imageData.data[i] = Math.random() * 255;
+					}
+					context.render();
+			
+					var t = 0;
+					window.setInterval(function() {
+						context.range = {
+							r: {low: 0, high: 64 + Math.sin(t) * 64},
+							g: {low: 0, high: 128 + Math.sin(t/2) * 128},
+							b: {low: 64 + Math.sin(t/3) * 64, high: 128 + Math.sin(t/3) * 64},
+							a: {low: 128 + Math.sin(t/5) * 64, high: 255}
+						};
+						context.render();
+						t++;
+					}, 50);
+			
+					document.getElementById('demo-levels').appendChild(canvas);
+				})();
+				</script>
+			</div>
+		</div>
+	</body>
+</html>
