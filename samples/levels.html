@@ -13,21 +13,41 @@
 			<h1>HDR Levels</h1>
 			<p>This demo shows how channel levels can be adjusted very simply without modifying the pixel data.</p> 
 		
-			<div class="demo" id="demo-levels">
-				<script>
+			<div class="demo" id="demo-levels" style="position:relative"><div id="demo-histogram" style="position:absolute;bottom:15px;left:15px"></div></div>
+			
+			<script>
+			(function() {
+				
+				// noise canvas
+				// ---------------------------------------------------------
+				
+				var canvas = document.createElement('canvas');
+				canvas.width = 470;
+				canvas.height = 100;
+				var context = canvas.getContext('hdr2d');
+				document.getElementById('demo-levels').appendChild(canvas);
+				
+				for (var i = 0, n = context.imageData.data.length; i < n; i++) {
+					context.imageData.data[i] = Math.random() * 255;
+				}
+				context.render();
+				
+				// histogram canvas
+				// ---------------------------------------------------------
+				
+				var canvas_histogram = document.createElement('canvas');
+				canvas_histogram.width = 470;
+				canvas_histogram.height = 100;
+				var context_histogram = canvas_histogram.getContext('2d');
+				document.getElementById('demo-histogram').appendChild(canvas_histogram);
+				
+				// animation loop
+				// ---------------------------------------------------------
+				
 				(function() {
-					var canvas = document.createElement('canvas');
-					canvas.width = 470;
-					canvas.height = 100;
-			
-					var context = canvas.getContext('hdr2d');
-					for (var i = 0, n = context.imageData.data.length; i < n; i++) {
-						context.imageData.data[i] = Math.random() * 255;
-					}
-					context.render();
-			
 					var t = 0;
 					window.setInterval(function() {
+						// update levels
 						context.range = {
 							r: {low: 0, high: 64 + Math.sin(t) * 64},
 							g: {low: 0, high: 128 + Math.sin(t/2) * 128},
@@ -36,12 +56,42 @@
 						};
 						context.render();
 						t++;
+						
+						// render histogram
+						context_histogram.clearRect(0, 0, canvas_histogram.width, canvas_histogram.height);
+						
+						var bin_count = canvas_histogram.width;
+						var bins = [[], [], [], []];
+						for (var i = 0; i < bin_count; i++) {
+							bins[0].push(0);
+							bins[1].push(0);
+							bins[2].push(0);
+							bins[3].push(0);
+						}
+						
+						var ranges = [context.range.r, context.range.g, context.range.b, context.range.a];
+						for (var i = 0, n = context.imageData.data.length; i < n; i++) {
+							var channel = i % 4;
+							var range = ranges[channel];
+							var normalized = (context.imageData.data[i] - ranges[channel].low) / (ranges[channel].high - ranges[channel].low);
+							if (normalized >= 0 && normalized <= 1) {
+								bins[channel][Math.floor(normalized * bin_count)]++;
+							}
+						}
+						
+						var channel_colors = ['#ff0000', '#00ff00', '#0000ff', '#d0d0d0'];
+						for (var i = 0; i < bin_count; i++) {
+							for (var channel = 0; channel < 4; channel++) {
+								var h = bins[channel][i] / 3;
+								context_histogram.fillStyle = channel_colors[channel];
+								context_histogram.fillRect(i, canvas_histogram.height - h, 1, h);
+							}
+						}
 					}, 50);
-			
-					document.getElementById('demo-levels').appendChild(canvas);
 				})();
-				</script>
-			</div>
+				
+			})();
+			</script>
 		</div>
 	</body>
 </html>
