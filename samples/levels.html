@@ -2,52 +2,46 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<title>HDR Levels Demo - canvas.hdr.js</title>
 		<link rel="stylesheet" type="text/css" href="stylesheet.css">
 		<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+		<script src="assets/gannett.jpg.js"></script>
 		<script src="../canvas.hdr.js"></script>
 	</head>
 	<body>
 		<div id="wrapper">
 			<div class="lib">canvas.hdr.js</div>
 			<h1>HDR Levels</h1>
-			<p>This demo shows how channel levels can be adjusted very simply without modifying the pixel data.</p> 
+			<p>This demo shows how channel levels can be adjusted individually very simply without modifying the underlying pixel data.</p> 
 		
 			<div class="demo" id="demo-levels" style="position:relative"><div id="demo-histogram" style="position:absolute;bottom:15px;left:15px"></div></div>
 			
 			<script>
 			(function() {
-				
-				// noise canvas
-				// ---------------------------------------------------------
-				
-				var canvas = document.createElement('canvas');
-				canvas.width = 470;
-				canvas.height = 100;
-				var context = canvas.getContext('hdr2d');
-				document.getElementById('demo-levels').appendChild(canvas);
-				
-				for (var i = 0, n = context.imageData.data.length; i < n; i++) {
-					context.imageData.data[i] = Math.random() * 255;
-				}
-				context.render();
-				
-				// histogram canvas
-				// ---------------------------------------------------------
-				
-				var canvas_histogram = document.createElement('canvas');
-				canvas_histogram.width = 470;
-				canvas_histogram.height = 100;
-				var context_histogram = canvas_histogram.getContext('2d');
-				document.getElementById('demo-histogram').appendChild(canvas_histogram);
-				
-				// animation loop
-				// ---------------------------------------------------------
-				
-				(function() {
+				var img = new Image();
+				img.onload = function() {
+					
+					var WIDTH = 470;
+					var HEIGHT = 300;
+					
+					// image canvas
+					var canvas = document.createElement('canvas');
+					canvas.width = WIDTH;
+					canvas.height = HEIGHT;
+					var context = canvas.getContext('hdr2d');
+					document.getElementById('demo-levels').appendChild(canvas);
+					context.drawImage(img, 0, 0);
+					
+					// histogram canvas
+					var canvas_histogram = document.createElement('canvas');
+					canvas_histogram.width = WIDTH;
+					canvas_histogram.height = HEIGHT;
+					var context_histogram = canvas_histogram.getContext('2d');
+					document.getElementById('demo-histogram').appendChild(canvas_histogram);
+					
 					var t = 0;
 					window.setInterval(function() {
-						// update levels
+						// update image levels
 						context.range = {
 							r: {low: 0, high: 64 + Math.sin(t) * 64},
 							g: {low: 0, high: 128 + Math.sin(t/2) * 128},
@@ -55,12 +49,12 @@
 							a: {low: 128 + Math.sin(t/5) * 64, high: 255}
 						};
 						context.render();
-						t++;
+						t += 0.2;
 						
 						// render histogram
 						context_histogram.clearRect(0, 0, canvas_histogram.width, canvas_histogram.height);
 						
-						var bin_count = canvas_histogram.width;
+						var bin_count = 32;
 						var bins = [[], [], [], []];
 						for (var i = 0; i < bin_count; i++) {
 							bins[0].push(0);
@@ -81,15 +75,16 @@
 						
 						var channel_colors = ['#ff0000', '#00ff00', '#0000ff', '#d0d0d0'];
 						for (var i = 0; i < bin_count; i++) {
-							for (var channel = 0; channel < 4; channel++) {
-								var h = bins[channel][i] / 3;
+							for (var channel = 0; channel < 3; channel++) {
+								var h = bins[channel][i] / context.imageData.data.length * 1500;
 								context_histogram.fillStyle = channel_colors[channel];
 								context_histogram.fillRect(i, canvas_histogram.height - h, 1, h);
 							}
 						}
-					}, 50);
-				})();
+					}, 30);
+				};
 				
+				img.src = src_gannett;
 			})();
 			</script>
 		</div>
