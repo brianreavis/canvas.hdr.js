@@ -268,8 +268,8 @@
 				var data  = context_tmp.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 				var x_min = Math.floor(dx);
 				var y_min = Math.floor(dy);
-				var x_max = Math.ceil(dx, dWidth);
-				var y_max = Math.ceil(dy, dHeight);
+				var x_max = Math.ceil(dx + dWidth);
+				var y_max = Math.ceil(dy + dHeight);
 				for (y = y_min; y < y_max; y++) {
 					for (x = x_min; x < x_max; x++) {
 						i = dy * CANVAS_WIDTH + dx;
