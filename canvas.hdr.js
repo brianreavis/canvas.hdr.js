@@ -79,11 +79,11 @@
 
 			var canvas = this;
 			
-			var CANVAS_WIDTH   = canvas.width;
-			var CANVAS_HEIGHT  = canvas.height;
-			var context2D      = base.apply(this, ['2d']);
-			var imageData2D    = context2D.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-			var imageData2DHDR = new ImageDataHDR(CANVAS_WIDTH, CANVAS_HEIGHT);
+			var CANVAS_WIDTH    = canvas.width;
+			var CANVAS_HEIGHT   = canvas.height;
+			var context2D       = base.apply(this, ['2d']);
+			var imageData2D     = context2D.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+			var imageData2DHDR  = new ImageDataHDR(CANVAS_WIDTH, CANVAS_HEIGHT);
 			
 			var context = {
 				canvas: canvas,
@@ -171,7 +171,7 @@
 			 * @param {object} color - An object containing r, g, b, a color components.
 			 */
 			context.setPixel = function(x, y, color) {
-				var i = x + y * CANVAS_WIDTH;
+				var i = (x + y * CANVAS_WIDTH) * 4;
 				var blend = getBlendFunction(context.globalBlendMode);
 				
 				if (typeof color.a === 'undefined') {
@@ -193,7 +193,7 @@
 			 * @returns {object}
 			 */
 			context.getPixel = function(x, y) {
-				var i = x + y * CANVAS_WIDTH;
+				var i = (x + y * CANVAS_WIDTH) * 4;
 				return {
 					r: imageData2DHDR.data[i],
 					g: imageData2DHDR.data[i+1],
@@ -258,31 +258,31 @@
 				var canvas_tmp = document.createElement('canvas');
 				canvas_tmp.width = CANVAS_WIDTH;
 				canvas_tmp.height = CANVAS_HEIGHT;
-					
-				var context_tmp = canvas.getContext('2d');
+				
+				var context_tmp = canvas_tmp.getContext('2d');
 				context_tmp.globalAlpha = 1;
 				context_tmp.drawImage.apply(context_tmp, args);
 				
 				// composite image onto hdr canvas
 				var blend = getBlendFunction(context.globalBlendMode);
-				var data  = context_tmp.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+				var data  = context_tmp.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT).data;
 				var x_min = Math.floor(dx);
 				var y_min = Math.floor(dy);
 				var x_max = Math.ceil(dx + dWidth);
 				var y_max = Math.ceil(dy + dHeight);
 				for (y = y_min; y < y_max; y++) {
 					for (x = x_min; x < x_max; x++) {
-						i = dy * CANVAS_WIDTH + dx;
+						i = (y * CANVAS_WIDTH + x) * 4;
 						alpha = data[i+3] * context.globalAlpha;
-						imageData2DHDR[i] = blend(imageData2DHDR[i], data[i], alpha);
-						imageData2DHDR[i+1] = blend(imageData2DHDR[i+1], data[i+1], alpha);
-						imageData2DHDR[i+2] = blend(imageData2DHDR[i+2], data[i+2], alpha);
-						imageData2DHDR[i+3] = Math.min(255, imageData2DHDR[i+3] + alpha);
+						imageData2DHDR.data[i] = blend(imageData2DHDR.data[i], data[i], alpha);
+						imageData2DHDR.data[i+1] = blend(imageData2DHDR.data[i+1], data[i+1], alpha);
+						imageData2DHDR.data[i+2] = blend(imageData2DHDR.data[i+2], data[i+2], alpha);
+						imageData2DHDR.data[i+3] = Math.min(255, imageData2DHDR.data[i+3] + alpha);
 					}
 				}
-				
 				delete context_tmp;
 				delete canvas_tmp;
+				context.render();
 			};
 			
 			/**
@@ -296,9 +296,9 @@
 						ranges.push(context.range[k]);
 					}
 				}
-				for (var r, i = 0, n = context.imageData.data.length; i < n; i++) {
+				for (var r, i = 0, n = imageData2DHDR.data.length; i < n; i++) {
 					r = ranges[i % 4];
-					imageData2D.data[i] = (context.imageData.data[i] - r.low) / (r.high - r.low) * 255;
+					imageData2D.data[i] = (imageData2DHDR.data[i] - r.low) / (r.high - r.low) * 255;
 				}
 				context2D.putImageData(imageData2D, 0, 0);
 			};
