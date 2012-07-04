@@ -143,18 +143,18 @@
 			var getBlendFunction = (function() {
 				var modes = {};
 				
-				var composite = function(comp_base, comp_new, alpha) {
-					return comp_base + (comp_new - comp_base) * (alpha / 255);
+				var composite = function(comp_src, comp_dest, alpha_src, alpha_dest, alpha_merged) {
+					return (comp_src * alpha_src + comp_dest * alpha_dest * (1 - alpha_src)) / alpha_merged;
 				};
 				
-				modes[HDR2D_BLEND_NORMAL] = function(comp_base, comp_new, alpha) {
-					return composite(comp_base, comp_new, alpha);
+				modes[HDR2D_BLEND_NORMAL] = function(comp_src, comp_dest, alpha_src, alpha_dest, alpha_merged) {
+					return composite(comp_src, comp_dest, alpha_src, alpha_dest, alpha_merged);
 				};
-				modes[HDR2D_BLEND_ADD] = function(comp_base, comp_new, alpha) {
-					return composite(comp_base, comp_base + comp_new, alpha);
+				modes[HDR2D_BLEND_ADD] = function(comp_src, comp_dest, alpha_src, alpha_dest, alpha_merged) {
+					return composite(comp_src, comp_src + comp_dest, alpha_src, alpha_dest, alpha_merged);
 				};
-				modes[HDR2D_BLEND_SUBTRACT] = function(comp_base, comp_new, alpha) {
-					return composite(comp_base, Math.max(0, comp_base - comp_new), alpha);
+				modes[HDR2D_BLEND_SUBTRACT] = function(comp_src, comp_dest, alpha_src, alpha_dest, alpha_merged) {
+					return composite(comp_src, Math.max(0, comp_src - comp_dest), alpha_src, alpha_dest, alpha_merged);
 				};
 				
 				return function(mode) {
@@ -179,10 +179,14 @@
 					color.a = 255;
 				}
 				
-				imageData2DHDR.data[i]   = blend(imageData2DHDR.data[i], color.r, color.a);
-				imageData2DHDR.data[i+1] = blend(imageData2DHDR.data[i+1], color.g, color.a);
-				imageData2DHDR.data[i+2] = blend(imageData2DHDR.data[i+2], color.b, color.a);
-				imageData2DHDR.data[i+3] = Math.min(255, imageData2DHDR.data[i+3] + color.a);
+				var alpha_src = imageData2DHDR.data[i+3] / 255;
+				var alpha_dest = color.a * context.globalAlpha / 255;
+				var alpha_merged = Math.min(1, alpha_src + alpha_dest * (1 - alpha_src));
+				
+				imageData2DHDR.data[i]   = blend(imageData2DHDR.data[i], color.r, alpha_src, alpha_dest, alpha_merged);
+				imageData2DHDR.data[i+1] = blend(imageData2DHDR.data[i+1], color.g, alpha_src, alpha_dest, alpha_merged);
+				imageData2DHDR.data[i+2] = blend(imageData2DHDR.data[i+2], color.b, alpha_src, alpha_dest, alpha_merged);
+				imageData2DHDR.data[i+3] = alpha_merged * 255;
 				
 				imageData2DPixel.data[0] = (imageData2DHDR.data[i] - context.range.r.low) / (context.range.r.high - context.range.r.low) * 255;
 				imageData2DPixel.data[1] = (imageData2DHDR.data[i+1] - context.range.g.low) / (context.range.g.high - context.range.g.low) * 255;
@@ -269,6 +273,7 @@
 				context_tmp.drawImage.apply(context_tmp, args);
 				
 				// composite image onto hdr canvas
+				var alpha_src, alpha_dest, alpha_merged;
 				var blend = getBlendFunction(context.globalBlendMode);
 				var data  = context_tmp.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT).data;
 				var x_min = Math.floor(dx);
@@ -278,13 +283,18 @@
 				for (y = y_min; y < y_max; y++) {
 					for (x = x_min; x < x_max; x++) {
 						i = (y * CANVAS_WIDTH + x) * 4;
-						alpha = data[i+3] * context.globalAlpha;
-						imageData2DHDR.data[i] = blend(imageData2DHDR.data[i], data[i], alpha);
-						imageData2DHDR.data[i+1] = blend(imageData2DHDR.data[i+1], data[i+1], alpha);
-						imageData2DHDR.data[i+2] = blend(imageData2DHDR.data[i+2], data[i+2], alpha);
-						imageData2DHDR.data[i+3] = Math.min(255, imageData2DHDR.data[i+3] + alpha);
+						
+						alpha_src = imageData2DHDR.data[i+3] / 255;
+						alpha_dest = (data[i+3] * context.globalAlpha) / 255;
+						alpha_merged = Math.min(1, alpha_src + alpha_dest * (1 - alpha_src));
+						
+						imageData2DHDR.data[i] = blend(imageData2DHDR.data[i], data[i], alpha_src, alpha_dest, alpha_merged);
+						imageData2DHDR.data[i+1] = blend(imageData2DHDR.data[i+1], data[i+1], alpha_src, alpha_dest, alpha_merged);
+						imageData2DHDR.data[i+2] = blend(imageData2DHDR.data[i+2], data[i+2], alpha_src, alpha_dest, alpha_merged);
+						imageData2DHDR.data[i+3] = alpha_merged * 255;
 					}
 				}
+				
 				delete context_tmp;
 				delete canvas_tmp;
 				context.render();
