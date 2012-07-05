@@ -280,6 +280,8 @@
 				var y_min = Math.floor(dy);
 				var x_max = Math.ceil(dx + dWidth);
 				var y_max = Math.ceil(dy + dHeight);
+				var x_max = Math.min(CANVAS_WIDTH, Math.ceil(dx + dWidth));
+				var y_max = Math.min(CANVAS_WIDTH, Math.ceil(dy + dHeight));
 				for (y = y_min; y < y_max; y++) {
 					for (x = x_min; x < x_max; x++) {
 						i = (y * CANVAS_WIDTH + x) * 4;
