@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>HDR Levels Demo - canvas.hdr.js</title>
+		<link rel="stylesheet" type="text/css" href="stylesheet.css">
+		<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+		<script src="assets/gannett.jpg.js"></script>
+		<script src="assets/flower.png.js"></script>
+		<script src="../canvas.hdr.js"></script>
+		<style>
+		#modes {
+			list-style: none;
+		}
+		#modes li {
+			margin: 0 0 20px 0;
+		}
+		#modes li h2 {
+			font-size: 20px;
+			margin: 0 0 15px 0;
+		}
+		#modes li canvas {
+			background: url(assets/checkerboard.gif);
+		}
+		</style>
+	</head>
+	<body>
+		<div id="wrapper">
+			<div class="lib">canvas.hdr.js</div>
+			<h1>Blending Modes</h1>
+			<p>This demo shows blending modes.</p> 
+		
+			<ul id="modes"></ul>
+			
+			<script>
+			(function() {
+				var loaded = 0;
+				
+				var img_mountain = new Image();
+				var img_flower   = new Image();
+				
+				img_mountain.onload = img_flower.onload = function() { if (++loaded === 2) onImagesLoaded(); }
+				img_mountain.src    = src_gannett;
+				img_flower.src      = src_flower;
+				
+				var modes = [
+					'HDR2D_BLEND_SRC', 'HDR2D_BLEND_DST', 'HDR2D_BLEND_CLEAR', 'HDR2D_BLEND_XOR',
+					'HDR2D_BLEND_OVER', 'HDR2D_BLEND_IN', 'HDR2D_BLEND_OUT', 'HDR2D_BLEND_ATOP',
+					'HDR2D_BLEND_DST_OVER', 'HDR2D_BLEND_DST_IN', 'HDR2D_BLEND_DST_OUT', 'HDR2D_BLEND_DST_ATOP',
+					'HDR2D_BLEND_ADD', 'HDR2D_BLEND_SUBTRACT'
+				];
+				
+				
+				var onImagesLoaded = function() {
+					var i = 0;
+					var interval = window.setInterval(function() {
+						if (i === modes.length) {
+							window.clearInterval(interval);
+							return;
+						}
+						var t0 = (new Date()).getTime();
+						var li = document.createElement('li');
+						var h2 = document.createElement('h2');
+						h2.innerHTML = modes[i];
+						
+						var canvas = document.createElement('canvas');
+						canvas.width = 470;
+						canvas.height = 300;
+						var context = canvas.getContext('hdr2d');
+							
+						li.appendChild(h2);
+						li.appendChild(canvas);
+						document.getElementById('modes').appendChild(li);
+						
+						// draw base image
+						context.drawImage(img_mountain, 0, 0);
+							
+						// draw overlay image
+						context.globalBlendMode = window[modes[i]];
+						context.drawImage(img_flower, 0, 0);
+						
+						var t1 = (new Date()).getTime();
+						console.log(Math.round(t1 - t0, 4));
+						i++;
+					}, 500);
+				};
+			})();
+			</script>
+		</div>
+	</body>
+</html>
