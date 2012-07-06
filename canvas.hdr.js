@@ -55,6 +55,12 @@
 
 	window.HDR2D_BLEND_ADD       = 12;
 	window.HDR2D_BLEND_SUBTRACT  = 13;
+	window.HDR2D_BLEND_MULTIPLY  = 14;
+	window.HDR2D_BLEND_AVERAGE   = 15;
+	window.HDR2D_BLEND_SCREEN    = 16;
+	window.HDR2D_BLEND_SOFTLIGHT = 17;
+	window.HDR2D_BLEND_HARDLIGHT = 18;
+	window.HDR2D_BLEND_OVERLAY   = 19;
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -209,15 +215,49 @@
 		};
 		modes[HDR2D_BLEND_ADD] = {
 			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return comp_dest * alpha_dest + comp_src + alpha_src;
 				return comp_dest * alpha_dest + comp_src * alpha_src;
 			},
 			alpha: modes[HDR2D_BLEND_OVER].alpha
 		};
 		modes[HDR2D_BLEND_SUBTRACT] = {
 			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return comp_dest * alpha_dest - comp_src + alpha_src;
 				return comp_dest * alpha_dest - comp_src * alpha_src;
+			},
+			alpha: modes[HDR2D_BLEND_OVER].alpha
+		};
+		modes[HDR2D_BLEND_MULTIPLY] = {
+			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
+				return (comp_src * comp_dest) / 255 * alpha_src + comp_dest * alpha_dest * (1 - alpha_src);
+			},
+			alpha: modes[HDR2D_BLEND_OVER].alpha
+		};
+		modes[HDR2D_BLEND_AVERAGE] = {
+			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
+				return (comp_src + comp_dest) / 2 * alpha_src + comp_dest * alpha_dest * (1 - alpha_src);
+			},
+			alpha: modes[HDR2D_BLEND_OVER].alpha
+		};
+		modes[HDR2D_BLEND_SCREEN] = {
+			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
+				return (255 - (Math.round((255 - comp_src) * (255 - comp_dest)) >> 8)) * alpha_src + comp_dest * alpha_dest * (1 - alpha_src);
+			},
+			alpha: modes[HDR2D_BLEND_OVER].alpha
+		};
+		modes[HDR2D_BLEND_OVERLAY] = {
+			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
+				return ((comp_src > 128) ? (2 * comp_dest * comp_src / 255) : (255 - 2 * (255 - comp_dest) * (255 - comp_src) / 255)) * alpha_src + comp_dest * alpha_dest * (1 - alpha_src);
+			},
+			alpha: modes[HDR2D_BLEND_OVER].alpha
+		};
+		modes[HDR2D_BLEND_SOFTLIGHT] = {
+			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
+				return ((comp_dest < 128) ? (2 * ((Math.round(comp_src) >> 1) + 64)) * (comp_dest / 255) : (255 - (2 * (255 - ((Math.round(comp_src) >> 1) + 64)) * (255 - comp_dest) / 255))) * alpha_src + comp_dest * alpha_dest * (1 - alpha_src);
+			},
+			alpha: modes[HDR2D_BLEND_OVER].alpha
+		};
+		modes[HDR2D_BLEND_HARDLIGHT] = {
+			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
+				return ((comp_src < 128) ? (2 * comp_dest * comp_src / 255) : (255 - 2 * (255 - comp_dest) * (255 - comp_src) / 255)) * alpha_src + comp_dest * alpha_dest * (1 - alpha_src);
 			},
 			alpha: modes[HDR2D_BLEND_OVER].alpha
 		};
