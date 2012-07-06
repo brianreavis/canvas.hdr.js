@@ -119,7 +119,7 @@ context.range = {
 };
 ```
 
- Once you have modified the levels, refresh the display:
+Once you have modified the levels, refresh the display:
 
 ```javascript
 context.render();
@@ -128,6 +128,40 @@ context.render();
 ### Direct Pixel Buffer Access
 
 Unlike the traditional "2d" context, "hdr2d" exposes the raw pixel buffer as `context.imageData` (no need to call `getImageData()`). After you have modified the buffer, make sure to call `context.render()` to refresh the canvas.
+
+## Public Properties / Methods
+
+### context.levels
+
+An object containing output display levels (by channel). See [Levels](#levels).
+
+### context.globalAlpha
+
+A 0.0–1.0 alpha channel multiplier applied to drawing operations.
+
+### context.globalBlendMode
+
+The blending mode used in drawing operations. See [Blending Modes](#blending-modes).
+
+### context.getPixel(x, y)
+
+Returns an object containing `r`, `g`, `b`, and `a` color components.
+
+### context.setPixel(x, y, color)
+
+Composites the color at (`x`, `y`). The `color` argument should be an object containing `r`, `g`, `b`, and `a` color components.
+
+### context.drawImage(img, x, y, width, height)
+
+Composites the image at (`x`, `y`). This method complies with the [drawImage() specification](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-drawimage). 
+
+### context.getImageData(x, y, width, height)
+
+Returns the raw image data for the given region (it will be an `ImageDataHDR` object, which mirrors [ImageData](https://developer.mozilla.org/en/DOM/ImageData) in design).
+
+### context.render()
+
+Re-renders the entire context, using updated settings.
 
 ## License (MIT)
 
