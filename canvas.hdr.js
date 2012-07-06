@@ -210,12 +210,14 @@
 		modes[HDR2D_BLEND_ADD] = {
 			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
 				return comp_dest * alpha_dest + comp_src + alpha_src;
+				return comp_dest * alpha_dest + comp_src * alpha_src;
 			},
 			alpha: modes[HDR2D_BLEND_OVER].alpha
 		};
 		modes[HDR2D_BLEND_SUBTRACT] = {
 			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
 				return comp_dest * alpha_dest - comp_src + alpha_src;
+				return comp_dest * alpha_dest - comp_src * alpha_src;
 			},
 			alpha: modes[HDR2D_BLEND_OVER].alpha
 		};
