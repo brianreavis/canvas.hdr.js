@@ -118,146 +118,146 @@
 		var modes = {};
 
 		modes[HDR2D_BLEND_SRC] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
 				return comp_src * alpha_src;
 			},
-			alpha: function(alpha_src, alpha_dest) {
+			alpha: function(alpha_src, alpha_dst) {
 				return alpha_src;
 			}
 		};
 		modes[HDR2D_BLEND_DST] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return comp_dest * alpha_dest;
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return comp_dst * alpha_dst;
 			},
-			alpha: function(alpha_src, alpha_dest) {
-				return alpha_dest;
+			alpha: function(alpha_src, alpha_dst) {
+				return alpha_dst;
 			}
 		};
 		modes[HDR2D_BLEND_CLEAR] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
 				return 0;
 			},
-			alpha: function(alpha_src, alpha_dest) {
+			alpha: function(alpha_src, alpha_dst) {
 				return 0;
 			}
 		};
 		modes[HDR2D_BLEND_XOR] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return comp_src * alpha_src * (1 - alpha_dest) + comp_dest * alpha_dest * (1 - alpha_src);
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return comp_src * alpha_src * (1 - alpha_dst) + comp_dst * alpha_dst * (1 - alpha_src);
 			},
-			alpha: function(alpha_src, alpha_dest) {
-				return alpha_src + alpha_dest - 2 * alpha_src * alpha_dest;
+			alpha: function(alpha_src, alpha_dst) {
+				return alpha_src + alpha_dst - 2 * alpha_src * alpha_dst;
 			}
 		};
 		modes[HDR2D_BLEND_OVER] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return comp_src * alpha_src + comp_dest * alpha_dest * (1 - alpha_src);
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return comp_src * alpha_src + comp_dst * alpha_dst * (1 - alpha_src);
 			},
-			alpha: function(alpha_src, alpha_dest) {
-				return alpha_src + alpha_dest - alpha_src * alpha_dest;
+			alpha: function(alpha_src, alpha_dst) {
+				return alpha_src + alpha_dst - alpha_src * alpha_dst;
 			}
 		};
 		modes[HDR2D_BLEND_IN] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return comp_src * alpha_src * alpha_dest;
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return comp_src * alpha_src * alpha_dst;
 			},
-			alpha: function(alpha_src, alpha_dest) {
-				return alpha_src * alpha_dest;
+			alpha: function(alpha_src, alpha_dst) {
+				return alpha_src * alpha_dst;
 			}
 		};
 		modes[HDR2D_BLEND_OUT] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return comp_src * alpha_src * (1 - alpha_dest);
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return comp_src * alpha_src * (1 - alpha_dst);
 			},
-			alpha: function(alpha_src, alpha_dest) {
-				return alpha_src * (1 - alpha_dest);
+			alpha: function(alpha_src, alpha_dst) {
+				return alpha_src * (1 - alpha_dst);
 			}
 		};
 		modes[HDR2D_BLEND_ATOP] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return comp_src * alpha_src * alpha_dest + comp_dest * alpha_dest * (1 - alpha_src);
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return comp_src * alpha_src * alpha_dst + comp_dst * alpha_dst * (1 - alpha_src);
 			},
-			alpha: function(alpha_src, alpha_dest) {
-				return alpha_dest;
+			alpha: function(alpha_src, alpha_dst) {
+				return alpha_dst;
 			}
 		};
 		modes[HDR2D_BLEND_DST_OVER] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return comp_dest * alpha_dest + comp_src * alpha_src * (1 - alpha_dest);
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return comp_dst * alpha_dst + comp_src * alpha_src * (1 - alpha_dst);
 			},
-			alpha: function(alpha_src, alpha_dest) {
-				return alpha_src + alpha_dest - alpha_src * alpha_dest;
+			alpha: function(alpha_src, alpha_dst) {
+				return alpha_src + alpha_dst - alpha_src * alpha_dst;
 			}
 		};
 		modes[HDR2D_BLEND_DST_IN] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return comp_dest * alpha_dest * alpha_src;
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return comp_dst * alpha_dst * alpha_src;
 			},
-			alpha: function(alpha_src, alpha_dest) {
-				return alpha_src * alpha_dest;
+			alpha: function(alpha_src, alpha_dst) {
+				return alpha_src * alpha_dst;
 			}
 		};
 		modes[HDR2D_BLEND_DST_OUT] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return comp_dest * alpha_dest * (1 - alpha_src);
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return comp_dst * alpha_dst * (1 - alpha_src);
 			},
-			alpha: function(alpha_src, alpha_dest) {
-				return alpha_dest * (1 - alpha_src);
+			alpha: function(alpha_src, alpha_dst) {
+				return alpha_dst * (1 - alpha_src);
 			}
 		};
 		modes[HDR2D_BLEND_DST_ATOP] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return comp_dest * alpha_dest * alpha_src + comp_src * alpha_src * (1 - alpha_dest);
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return comp_dst * alpha_dst * alpha_src + comp_src * alpha_src * (1 - alpha_dst);
 			},
-			alpha: function(alpha_src, alpha_dest) {
+			alpha: function(alpha_src, alpha_dst) {
 				return alpha_src;
 			}
 		};
 		modes[HDR2D_BLEND_ADD] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return comp_dest * alpha_dest + comp_src * alpha_src;
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return comp_dst * alpha_dst + comp_src * alpha_src;
 			},
 			alpha: modes[HDR2D_BLEND_OVER].alpha
 		};
 		modes[HDR2D_BLEND_SUBTRACT] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return comp_dest * alpha_dest - comp_src * alpha_src;
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return comp_dst * alpha_dst - comp_src * alpha_src;
 			},
 			alpha: modes[HDR2D_BLEND_OVER].alpha
 		};
 		modes[HDR2D_BLEND_MULTIPLY] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return (comp_src * comp_dest) / 255 * alpha_src + comp_dest * alpha_dest * (1 - alpha_src);
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return (comp_src * comp_dst) / 255 * alpha_src + comp_dst * alpha_dst * (1 - alpha_src);
 			},
 			alpha: modes[HDR2D_BLEND_OVER].alpha
 		};
 		modes[HDR2D_BLEND_AVERAGE] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return (comp_src + comp_dest) / 2 * alpha_src + comp_dest * alpha_dest * (1 - alpha_src);
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return (comp_src + comp_dst) / 2 * alpha_src + comp_dst * alpha_dst * (1 - alpha_src);
 			},
 			alpha: modes[HDR2D_BLEND_OVER].alpha
 		};
 		modes[HDR2D_BLEND_SCREEN] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return (255 - (Math.round((255 - comp_src) * (255 - comp_dest)) >> 8)) * alpha_src + comp_dest * alpha_dest * (1 - alpha_src);
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return (255 - (Math.round((255 - comp_src) * (255 - comp_dst)) >> 8)) * alpha_src + comp_dst * alpha_dst * (1 - alpha_src);
 			},
 			alpha: modes[HDR2D_BLEND_OVER].alpha
 		};
 		modes[HDR2D_BLEND_OVERLAY] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return ((comp_src > 128) ? (2 * comp_dest * comp_src / 255) : (255 - 2 * (255 - comp_dest) * (255 - comp_src) / 255)) * alpha_src + comp_dest * alpha_dest * (1 - alpha_src);
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return ((comp_src > 128) ? (2 * comp_dst * comp_src / 255) : (255 - 2 * (255 - comp_dst) * (255 - comp_src) / 255)) * alpha_src + comp_dst * alpha_dst * (1 - alpha_src);
 			},
 			alpha: modes[HDR2D_BLEND_OVER].alpha
 		};
 		modes[HDR2D_BLEND_SOFTLIGHT] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return ((comp_dest < 128) ? (2 * ((Math.round(comp_src) >> 1) + 64)) * (comp_dest / 255) : (255 - (2 * (255 - ((Math.round(comp_src) >> 1) + 64)) * (255 - comp_dest) / 255))) * alpha_src + comp_dest * alpha_dest * (1 - alpha_src);
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return ((comp_dst < 128) ? (2 * ((Math.round(comp_src) >> 1) + 64)) * (comp_dst / 255) : (255 - (2 * (255 - ((Math.round(comp_src) >> 1) + 64)) * (255 - comp_dst) / 255))) * alpha_src + comp_dst * alpha_dst * (1 - alpha_src);
 			},
 			alpha: modes[HDR2D_BLEND_OVER].alpha
 		};
 		modes[HDR2D_BLEND_HARDLIGHT] = {
-			component: function(comp_src, comp_dest, alpha_src, alpha_dest) {
-				return ((comp_src < 128) ? (2 * comp_dest * comp_src / 255) : (255 - 2 * (255 - comp_dest) * (255 - comp_src) / 255)) * alpha_src + comp_dest * alpha_dest * (1 - alpha_src);
+			component: function(comp_src, comp_dst, alpha_src, alpha_dst) {
+				return ((comp_src < 128) ? (2 * comp_dst * comp_src / 255) : (255 - 2 * (255 - comp_dst) * (255 - comp_src) / 255)) * alpha_src + comp_dst * alpha_dst * (1 - alpha_src);
 			},
 			alpha: modes[HDR2D_BLEND_OVER].alpha
 		};
@@ -281,20 +281,20 @@
 			color.a = 255;
 		}
 
-		var alpha_dest = imageData2DHDR.data[i + 3] / 255;
+		var alpha_dst = this.imageData.data[i + 3] / 255;
 		var alpha_src  = color.a * context.globalAlpha / 255;
 
-		this.imageData.data[i]     = blend.component(color.r, this.imageData.data[i],  alpha_src, alpha_dest);
-		this.imageData.data[i + 1] = blend.component(color.g, this.imageData.data[i+1], alpha_src, alpha_dest);
-		this.imageData.data[i + 2] = blend.component(color.b, this.imageData.data[i+2], alpha_src, alpha_dest);
-		this.imageData.data[i + 3] = blend.alpha(alpha_src, alpha_dest) * 255;
+		this.imageData.data[i]     = blend.component(color.r, this.imageData.data[i],  alpha_src, alpha_dst);
+		this.imageData.data[i + 1] = blend.component(color.g, this.imageData.data[i+1], alpha_src, alpha_dst);
+		this.imageData.data[i + 2] = blend.component(color.b, this.imageData.data[i+2], alpha_src, alpha_dst);
+		this.imageData.data[i + 3] = blend.alpha(alpha_src, alpha_dst) * 255;
 
 		_imageData2DPixel.data[0]  = (this.imageData.data[i] - this.range.r.low) / (this.range.r.high - this.range.r.low) * 255;
 		_imageData2DPixel.data[1]  = (this.imageData.data[i + 1] - this.range.g.low) / (this.range.g.high - this.range.g.low) * 255;
 		_imageData2DPixel.data[2]  = (this.imageData.data[i + 2] - this.range.b.low) / (this.range.b.high - this.range.b.low) * 255;
 		_imageData2DPixel.data[3]  = (this.imageData.data[i + 3] - this.range.a.low) / (this.range.a.high - this.range.a.low) * 255;
 
-		context2D.putImageData(_imageData2DPixel, x, y);
+		this._context.putImageData(_imageData2DPixel, x, y);
 	};
 
 	/**
@@ -392,7 +392,7 @@
 		context_tmp.drawImage.apply(context_tmp, args);
 
 		// composite image onto hdr canvas
-		var i, x, y, alpha_src, alpha_dest;
+		var i, x, y, alpha_src, alpha_dst;
 		var blend = this.getBlendFunction(this.globalBlendMode);
 		var data  = context_tmp.getImageData(0, 0, this.imageData.width, this.imageData.height).data;
 		var x_min = Math.floor(dx);
@@ -403,13 +403,13 @@
 			for (x = x_min; x < x_max; x++) {
 				i = (y * this.imageData.width + x) * 4;
 
-				alpha_dest = this.imageData.data[i + 3] / 255;
+				alpha_dst = this.imageData.data[i + 3] / 255;
 				alpha_src  = (data[i + 3] * context.globalAlpha) / 255;
 
-				this.imageData.data[i]     = blend.component(data[i], this.imageData.data[i], alpha_src, alpha_dest);
-				this.imageData.data[i + 1] = blend.component(data[i + 1], this.imageData.data[i + 1], alpha_src, alpha_dest);
-				this.imageData.data[i + 2] = blend.component(data[i + 2], this.imageData.data[i + 2], alpha_src, alpha_dest);
-				this.imageData.data[i + 3] = blend.alpha(alpha_src, alpha_dest) * 255;
+				this.imageData.data[i]     = blend.component(data[i], this.imageData.data[i], alpha_src, alpha_dst);
+				this.imageData.data[i + 1] = blend.component(data[i + 1], this.imageData.data[i + 1], alpha_src, alpha_dst);
+				this.imageData.data[i + 2] = blend.component(data[i + 2], this.imageData.data[i + 2], alpha_src, alpha_dst);
+				this.imageData.data[i + 3] = blend.alpha(alpha_src, alpha_dst) * 255;
 			}
 		}
 
