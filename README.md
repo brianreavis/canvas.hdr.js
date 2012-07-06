@@ -161,7 +161,7 @@ Unlike the traditional "2d" context, "hdr2d" exposes the raw pixel buffer as `co
 
 ## Public Properties / Methods
 
-### context.levels
+### context.range
 
 An object containing output display levels (by channel). See [Levels](#levels).
 

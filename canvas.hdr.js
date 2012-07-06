@@ -1,4 +1,4 @@
-/*
+/**
  * "hdr2d" Canvas Context
  * Copyright (c) 2012 Brian Reavis, http://thirdroute.com/
  *
@@ -32,11 +32,11 @@
 			return false;
 		}
 		return true;
-	}
+	};
 
-	if (!__f('HTMLCanvasElement')) return;
-	if (!__f('ArrayBuffer')) return;
-	if (!__f('Float32Array')) return;
+	if (!__f('HTMLCanvasElement')) { return; }
+	if (!__f('ArrayBuffer')) { return; }
+	if (!__f('Float32Array')) { return; }
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -77,8 +77,8 @@
 	 * Mirrors ImageData in design.
 	 *
 	 * @constructor
-	 * @param {int} width
-	 * @param {int} height
+	 * @param {Number} width
+	 * @param {Number} height
 	 */
 	var ImageDataHDR = function(width, height) {
 		this.width  = width;
@@ -89,7 +89,12 @@
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	/**
+	 * 2D Rendering Context using 32-bit float per channel
+	 * color resolution. Attempts to match CanvasRenderingContext2D
+	 * wherever possible.
+	 *
 	 * @constructor
+	 * @see CanvasRenderingContext2D
 	 * @param {HTMLCanvasElement} canvas
 	 */
 	var CanvasRenderingContextHDR2D = function(canvas) {
@@ -99,8 +104,13 @@
 		this.canvas     = canvas;
 	};
 
+	/** A 0.0-1.0 alpha channel multiplier applied to drawing operations. */
 	CanvasRenderingContextHDR2D.prototype.globalAlpha = 1;
+
+	/** Blending mode used in drawing operations. */
 	CanvasRenderingContextHDR2D.prototype.globalBlendMode = HDR2D_BLEND_OVER;
+
+	/** Output display levels (by channel). */
 	CanvasRenderingContextHDR2D.prototype.range = {
 		r: {low: 0, high: 255},
 		g: {low: 0, high: 255},
@@ -112,7 +122,8 @@
 	 * Returns a function used for alpha compositing color and alpha channels,
 	 * given a particular compositing / blending mode.
 	 *
-	 * @param {int} mode - HDR2D_BLEND_SRC, HDR2D_BLEND_DST, etc.
+	 * @param {Number} mode - HDR2D_BLEND_SRC, HDR2D_BLEND_DST, etc.
+	 * @returns {Object} An object containing `component` and `alpha` compositing functions.
 	 */
 	CanvasRenderingContextHDR2D.prototype.getBlendFunction = (function() {
 		var modes = {};
@@ -268,10 +279,11 @@
 	})();
 
 	/**
-	 * Sets the color at the given position.
-	 * @param {int}    x     - x coordinate (px).
-	 * @param {int}    y     - y coordinate (px).
-	 * @param {object} color - An object containing r, g, b, a color components.
+	 * Composites the color onto the canvas at the given position.
+	 *
+	 * @param {Number} x - x coordinate (px).
+	 * @param {Number} y - y coordinate (px).
+	 * @param {Object} color - An object containing r, g, b, a color components.
 	 */
 	CanvasRenderingContextHDR2D.prototype.setPixel = function(x, y, color) {
 		var i = (Math.round(x) + Math.round(y) * this.canvas.width) * 4;
@@ -282,7 +294,7 @@
 		}
 
 		var alpha_dst = this.imageData.data[i + 3] / 255;
-		var alpha_src  = color.a * context.globalAlpha / 255;
+		var alpha_src = color.a * context.globalAlpha / 255;
 
 		this.imageData.data[i]     = blend.component(color.r, this.imageData.data[i],  alpha_src, alpha_dst);
 		this.imageData.data[i + 1] = blend.component(color.g, this.imageData.data[i+1], alpha_src, alpha_dst);
@@ -299,9 +311,10 @@
 
 	/**
 	 * Returns the color at the given position.
-	 * @param {int} x - x coordinate.
-	 * @param {int} y - y coordinate.
-	 * @returns {object}
+	 *
+	 * @param {Number} x - X coordinate (px).
+	 * @param {Number} y - Y coordinate (px).
+	 * @returns {Object}
 	 */
 	CanvasRenderingContextHDR2D.prototype.getPixel = function(x, y) {
 		var i = (Math.round(x) + Math.round(y) * this.imageData.width) * 4;
@@ -317,10 +330,12 @@
 	 * Returns the image data for a given region of the canvas context.
 	 * (for drop-in replacement)
 	 *
-	 * @param {int} x      - x coordinate (px).
-	 * @param {int} y      - y coordinate (px).
-	 * @param {int} width  - width of the slice (px).
-	 * @param {int} height - height of the slice (px).
+	 * @see CanvasRenderingContext2D.prototype.getImageData
+	 * @param {Number} x - X coordinate (px).
+	 * @param {Number} y - Y coordinate (px).
+	 * @param {Number} width - Width of the slice (px).
+	 * @param {Number} height - Height of the slice (px).
+	 * @returns {ImageDataHDR}
 	 */
 	CanvasRenderingContextHDR2D.prototype.getImageData = function(x, y, width, height) {
 		if (x === 0 && y === 0 && width === this.imageData.width && height === this.imageData.height) {
@@ -349,14 +364,15 @@
 	};
 
 	/**
-	 * Draws an image to the canvas.
+	 * Draws the given image onto the canvas.
 	 * (for drop-in replacement)
 	 *
-	 * @param {object} image - HTMLImageElement or HTMLCanvasElement or HTMLVideoElement.
-	 * @param {number} dx - Destination x coordinate (px).
-	 * @param {number} dy - Destination x coordinate (px).
-	 * @param {number} dWidth - Destination width (px).
-	 * @param {number} dHeight - Destination height (px).
+	 * @see CanvasRenderingContext2D.prototype.drawImage
+	 * @param {Object} image - HTMLImageElement or HTMLCanvasElement or HTMLVideoElement.
+	 * @param {Number} dx - Destination x coordinate (px).
+	 * @param {Number} dy - Destination x coordinate (px).
+	 * @param {Number} dWidth - Destination width (px).
+	 * @param {Number} dHeight - Destination height (px).
 	 */
 	CanvasRenderingContextHDR2D.prototype.drawImage = function(image, dx, dy, dWidth, dHeight) {
 		var args = arguments;
@@ -404,7 +420,7 @@
 				i = (y * this.imageData.width + x) * 4;
 
 				alpha_dst = this.imageData.data[i + 3] / 255;
-				alpha_src  = (data[i + 3] * context.globalAlpha) / 255;
+				alpha_src = (data[i + 3] * context.globalAlpha) / 255;
 
 				this.imageData.data[i]     = blend.component(data[i], this.imageData.data[i], alpha_src, alpha_dst);
 				this.imageData.data[i + 1] = blend.component(data[i + 1], this.imageData.data[i + 1], alpha_src, alpha_dst);
@@ -418,7 +434,7 @@
 
 	/**
 	 * Transforms the HDR data in its entirety into the
-	 * 8-bit color representation and  renders it to the canvas.
+	 * 8-bit color representation and renders it to the canvas.
 	 */
 	CanvasRenderingContextHDR2D.prototype.render = function() {
 		var ranges = [];
