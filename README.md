@@ -152,12 +152,12 @@ context.range = {
 Once you have modified the levels, refresh the display:
 
 ```javascript
-context.render();
+context.invalidate();
 ```
 
 ### Direct Pixel Buffer Access
 
-Unlike the traditional "2d" context, "hdr2d" exposes the raw pixel buffer as `context.imageData` (no need to call `getImageData()`). After you have modified the buffer, make sure to call `context.render()` to refresh the canvas.
+Unlike the traditional "2d" context, "hdr2d" exposes the raw pixel buffer as `context.imageData` (no need to call `getImageData()`). After you have modified the buffer, make sure to call `context.invalidate()` to refresh the canvas.
 
 ## Public Properties / Methods
 
@@ -189,9 +189,9 @@ Composites the image at (`x`, `y`). This method complies with the [drawImage() s
 
 Returns the raw image data for the given region (it will be an `ImageDataHDR` object, which mirrors [ImageData](https://developer.mozilla.org/en/DOM/ImageData) in design).
 
-### context.render()
+### context.invalidate(x, y, width, height)
 
-Re-renders the entire context, using updated settings.
+Re-renders a region of the canvas. If no arguments are given, the entire canvas is invalidated.
 
 ## License (MIT)
 

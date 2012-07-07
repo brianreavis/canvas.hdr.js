@@ -73,10 +73,11 @@
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	/**
-	 * Image data storage structure for HDR images.
-	 * Mirrors ImageData in design.
+	 * Image data storage structure for HDR images
+	 * that mirrors ImageData in design.
 	 *
 	 * @constructor
+	 * @see ImageData
 	 * @param {Number} width
 	 * @param {Number} height
 	 */
@@ -89,7 +90,7 @@
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	/**
-	 * 2D Rendering Context using 32-bit float per channel
+	 * 2D rendering context that provides 32-bit float per channel
 	 * color resolution. Attempts to match CanvasRenderingContext2D
 	 * wherever possible.
 	 *
@@ -104,13 +105,8 @@
 		this.canvas     = canvas;
 	};
 
-	/** A 0.0-1.0 alpha channel multiplier applied to drawing operations. */
 	CanvasRenderingContextHDR2D.prototype.globalAlpha = 1;
-
-	/** Blending mode used in drawing operations. */
 	CanvasRenderingContextHDR2D.prototype.globalBlendMode = HDR2D_BLEND_OVER;
-
-	/** Output display levels (by channel). */
 	CanvasRenderingContextHDR2D.prototype.range = {
 		r: {low: 0, high: 255},
 		g: {low: 0, high: 255},
@@ -281,32 +277,32 @@
 	/**
 	 * Composites the color onto the canvas at the given position.
 	 *
-	 * @param {Number} x - x coordinate (px).
-	 * @param {Number} y - y coordinate (px).
+	 * @param {Number} x - X coordinate (px).
+	 * @param {Number} y - Y coordinate (px).
 	 * @param {Object} color - An object containing r, g, b, a color components.
 	 */
 	CanvasRenderingContextHDR2D.prototype.setPixel = function(x, y, color) {
-		var i = (Math.round(x) + Math.round(y) * this.canvas.width) * 4;
+		var i = (Math.round(x) + Math.round(y) * this.imageData.width) * 4;
 		var blend = this.getBlendFunction(this.globalBlendMode);
 
 		if (typeof color.a === 'undefined') {
 			color.a = 255;
 		}
 
-		var alpha_dst = this.imageData.data[i + 3] / 255;
-		var alpha_src = color.a * context.globalAlpha / 255;
+		var alpha_dst = this.imageData.data[i+3] / 255;
+		var alpha_src = color.a * this.globalAlpha / 255;
 
-		this.imageData.data[i]     = blend.component(color.r, this.imageData.data[i],  alpha_src, alpha_dst);
-		this.imageData.data[i + 1] = blend.component(color.g, this.imageData.data[i+1], alpha_src, alpha_dst);
-		this.imageData.data[i + 2] = blend.component(color.b, this.imageData.data[i+2], alpha_src, alpha_dst);
-		this.imageData.data[i + 3] = blend.alpha(alpha_src, alpha_dst) * 255;
+		this.imageData.data[i]    = blend.component(color.r, this.imageData.data[i],  alpha_src, alpha_dst);
+		this.imageData.data[i+1]  = blend.component(color.g, this.imageData.data[i+1], alpha_src, alpha_dst);
+		this.imageData.data[i+2]  = blend.component(color.b, this.imageData.data[i+2], alpha_src, alpha_dst);
+		this.imageData.data[i+3]  = blend.alpha(alpha_src, alpha_dst) * 255;
 
-		_imageData2DPixel.data[0]  = (this.imageData.data[i] - this.range.r.low) / (this.range.r.high - this.range.r.low) * 255;
-		_imageData2DPixel.data[1]  = (this.imageData.data[i + 1] - this.range.g.low) / (this.range.g.high - this.range.g.low) * 255;
-		_imageData2DPixel.data[2]  = (this.imageData.data[i + 2] - this.range.b.low) / (this.range.b.high - this.range.b.low) * 255;
-		_imageData2DPixel.data[3]  = (this.imageData.data[i + 3] - this.range.a.low) / (this.range.a.high - this.range.a.low) * 255;
+		this._imageData.data[i]   = _imageData2DPixel.data[0] = (this.imageData.data[i] - this.range.r.low) / (this.range.r.high - this.range.r.low) * 255;
+		this._imageData.data[i+1] = _imageData2DPixel.data[1] = (this.imageData.data[i+1] - this.range.g.low) / (this.range.g.high - this.range.g.low) * 255;
+		this._imageData.data[i+2] = _imageData2DPixel.data[2] = (this.imageData.data[i+2] - this.range.b.low) / (this.range.b.high - this.range.b.low) * 255;
+		this._imageData.data[i+3] = _imageData2DPixel.data[3] = (this.imageData.data[i+3] - this.range.a.low) / (this.range.a.high - this.range.a.low) * 255;
 
-		this._context.putImageData(_imageData2DPixel, x, y);
+		this._context.putImageData(_imageData2DPixel, x, y, 0, 0, 1, 1);
 	};
 
 	/**
@@ -320,15 +316,14 @@
 		var i = (Math.round(x) + Math.round(y) * this.imageData.width) * 4;
 		return {
 			r: this.imageData.data[i],
-			g: this.imageData.data[i + 1],
-			b: this.imageData.data[i + 2],
-			a: this.imageData.data[i + 3]
+			g: this.imageData.data[i+1],
+			b: this.imageData.data[i+2],
+			a: this.imageData.data[i+3]
 		};
 	};
 
 	/**
 	 * Returns the image data for a given region of the canvas context.
-	 * (for drop-in replacement)
 	 *
 	 * @see CanvasRenderingContext2D.prototype.getImageData
 	 * @param {Number} x - X coordinate (px).
@@ -353,9 +348,9 @@
 				for (i = x; i < i_bound; i++) {
 					pos_base = (j * this.imageData.width + i) * 4;
 					result.data[pos_result++] = this.imageData.data[pos_base];
-					result.data[pos_result++] = this.imageData.data[pos_base + 1];
-					result.data[pos_result++] = this.imageData.data[pos_base + 2];
-					result.data[pos_result++] = this.imageData.data[pos_base + 3];
+					result.data[pos_result++] = this.imageData.data[pos_base+1];
+					result.data[pos_result++] = this.imageData.data[pos_base+2];
+					result.data[pos_result++] = this.imageData.data[pos_base+3];
 				}
 			}
 
@@ -365,7 +360,6 @@
 
 	/**
 	 * Draws the given image onto the canvas.
-	 * (for drop-in replacement)
 	 *
 	 * @see CanvasRenderingContext2D.prototype.drawImage
 	 * @param {Object} image - HTMLImageElement or HTMLCanvasElement or HTMLVideoElement.
@@ -411,42 +405,65 @@
 		var i, x, y, alpha_src, alpha_dst;
 		var blend = this.getBlendFunction(this.globalBlendMode);
 		var data  = context_tmp.getImageData(0, 0, this.imageData.width, this.imageData.height).data;
-		var x_min = Math.floor(dx);
-		var y_min = Math.floor(dy);
+		var x_min = Math.max(0, Math.floor(dx));
+		var y_min = Math.max(0, Math.floor(dy));
 		var x_max = Math.min(this.imageData.width, Math.ceil(dx + dWidth));
 		var y_max = Math.min(this.imageData.height, Math.ceil(dy + dHeight));
+		
 		for (y = y_min; y < y_max; y++) {
 			for (x = x_min; x < x_max; x++) {
 				i = (y * this.imageData.width + x) * 4;
 
-				alpha_dst = this.imageData.data[i + 3] / 255;
-				alpha_src = (data[i + 3] * context.globalAlpha) / 255;
+				alpha_dst = this.imageData.data[i+3] / 255;
+				alpha_src = (data[i+3] * this.globalAlpha) / 255;
 
-				this.imageData.data[i]     = blend.component(data[i], this.imageData.data[i], alpha_src, alpha_dst);
-				this.imageData.data[i + 1] = blend.component(data[i + 1], this.imageData.data[i + 1], alpha_src, alpha_dst);
-				this.imageData.data[i + 2] = blend.component(data[i + 2], this.imageData.data[i + 2], alpha_src, alpha_dst);
-				this.imageData.data[i + 3] = blend.alpha(alpha_src, alpha_dst) * 255;
+				this.imageData.data[i]   = blend.component(data[i], this.imageData.data[i], alpha_src, alpha_dst);
+				this.imageData.data[i+1] = blend.component(data[i+1], this.imageData.data[i+1], alpha_src, alpha_dst);
+				this.imageData.data[i+2] = blend.component(data[i+2], this.imageData.data[i+2], alpha_src, alpha_dst);
+				this.imageData.data[i+3] = blend.alpha(alpha_src, alpha_dst) * 255;
 			}
 		}
-
-		this.render();
+		
+		this.invalidate(x_min, y_min, x_max - x_min, y_max - y_min);
 	};
 
 	/**
-	 * Transforms the HDR data in its entirety into the
-	 * 8-bit color representation and renders it to the canvas.
+	 * Transforms the HDR data in the given region into its 8-bit color
+	 * representation and renders it to the canvas.
+	 *
+	 * @param {Number} x - (optional) X Coordinate (px).
+	 * @param {Number} y - (optional) Y Coordinate (px).
+	 * @param {Number} width - (optional) Width of region (px).
+	 * @param {Number} height - (optional) Height of region (px).
 	 */
-	CanvasRenderingContextHDR2D.prototype.render = function() {
-		var ranges = [];
-		for (var k in this.range) {
-			if (this.range.hasOwnProperty(k)) {
-				ranges.push(this.range[k]);
+	CanvasRenderingContextHDR2D.prototype.invalidate = function(x, y, width, height) {
+		var i, n, sx, sy, x_bound, y_bound, range;
+		var ranges = [this.range.r, this.range.g, this.range.b, this.range.a];
+		
+		if (typeof x === 'undefined') { x = 0; }
+		if (typeof y === 'undefined') { y = 0; }
+		if (typeof width === 'undefined') { width = this.imageData.width; }
+		if (typeof height === 'undefined') { height = this.imageData.height; }
+		
+		if (x === 0 && y === 0 && width === this.imageData.width && height === this.imageData.height) {
+			for (i = 0, n = this.imageData.data.length; i < n; i++) {
+				range = ranges[i % 4];
+				this._imageData.data[i] = (this.imageData.data[i] - range.low) / (range.high - range.low) * 255;
+			}
+		} else {
+			x_bound = Math.min(x + width, this.imageData.width);
+			y_bound = Math.min(y + height, this.imageData.height);
+			for (sy = y; sy < y_bound; sy++) {
+				for (sx = x; sx < x_bound; sx++) {
+					i = (sy * this.imageData.width + sx) * 4;
+					this._imageData.data[i]   = (this.imageData.data[i]   - ranges[0].low) / (ranges[0].high - ranges[0].low) * 255;
+					this._imageData.data[i+1] = (this.imageData.data[i+1] - ranges[1].low) / (ranges[1].high - ranges[1].low) * 255;
+					this._imageData.data[i+2] = (this.imageData.data[i+2] - ranges[2].low) / (ranges[2].high - ranges[2].low) * 255;
+					this._imageData.data[i+3] = (this.imageData.data[i+3] - ranges[3].low) / (ranges[3].high - ranges[3].low) * 255;
+				}
 			}
 		}
-		for (var r, i = 0, n = this.imageData.data.length; i < n; i++) {
-			r = ranges[i % 4];
-			this._imageData.data[i] = (this.imageData.data[i] - r.low) / (r.high - r.low) * 255;
-		}
+		
 		this._context.putImageData(this._imageData, 0, 0);
 	};
 

@@ -48,7 +48,7 @@
 							b: {low: 64 + Math.sin(t/3) * 64, high: 128 + Math.sin(t/3) * 64},
 							a: {low: 128 + Math.sin(t/5) * 64, high: 255}
 						};
-						context.render();
+						context.invalidate();
 						t += 0.2;
 						
 						// render histogram
