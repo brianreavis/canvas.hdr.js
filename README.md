@@ -173,17 +173,29 @@ A 0.0–1.0 alpha channel multiplier applied to drawing operations.
 
 The blending mode used in drawing operations. See [Blending Modes](#blending-modes).
 
+### context.fillStyle
+
+The color used by `fillRect()`. Valid formats: `#000000`, `#000` (shorthand), `rgba(0,0,0,0.5)`, `rgba(0,0,0)`, `hsl(20,100%,100%)`, `hsla(20, 100%,100%,0.5)`. See [fillStyle] for more information.
+
 ### context.getPixel(x, y)
 
 Returns an object containing `r`, `g`, `b`, and `a` color components.
 
 ### context.setPixel(x, y, color)
 
-Composites the color at (`x`, `y`). The `color` argument should be an object containing `r`, `g`, `b`, and `a` color components.
+Composites the color at (x, y). The `color` argument should be an object containing `r`, `g`, `b`, and `a` color components.
+
+### context.fillRect(x, y, width, height)
+
+Draws a rectangle at (x, y). To set the color, set [fillStyle](#contextfillstyle).
+
+### context.clearRect(x, y, width, height)
+
+Resets the pixels in the given region to (0, 0, 0, 0).
 
 ### context.drawImage(img, x, y, width, height)
 
-Composites the image at (`x`, `y`). This method complies with the [drawImage() specification](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-drawimage). 
+Composites the image at (x, y). This method complies with the [drawImage() specification](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-drawimage). 
 
 ### context.getImageData(x, y, width, height)
 

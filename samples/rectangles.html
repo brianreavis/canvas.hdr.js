@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>HDR Levels Demo - canvas.hdr.js</title>
+		<link rel="stylesheet" type="text/css" href="stylesheet.css">
+		<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+		<script src="assets/gannett.jpg.js"></script>
+		<script src="../canvas.hdr.js"></script>
+	</head>
+	<body>
+		<div id="wrapper">
+			<div class="lib">canvas.hdr.js</div>
+			<h1>Rectangles</h1>
+			<p>Draw rectangles just like you would would with the "2d" context.</p> 
+		
+			<div class="demo" id="demo-rectangles"></div>
+			
+			<script>
+			(function() {
+				var canvas = document.createElement('canvas');
+				canvas.width = 470;
+				canvas.height = 80;
+				var context = canvas.getContext('hdr2d');
+				document.getElementById('demo-rectangles').appendChild(canvas);
+				
+				// draw rectangles
+				context.fillStyle = '#ff0000';
+				context.fillRect(0, 0, 30, 30);
+				
+				context.fillStyle = 'green';
+				context.fillRect(10, 10, 30, 30);
+				
+				context.globalBlendMode = HDR2D_BLEND_ADD;
+				context.fillStyle = '#00f';
+				context.fillRect(20, 20, 30, 30);
+				context.globalBlendMode = HDR2D_BLEND_OVER;
+				
+				context.fillStyle = 'hsl(30, 100%, 50%)';
+				context.fillRect(30, 30, 30, 30);
+				
+				context.fillStyle = 'hsla(0, 0%, 0%, 0.5)';
+				context.fillRect(40, 40, 30, 30);
+				
+				context.fillStyle = 'rgba(0, 0, 0, 0.2)';
+				context.fillRect(50, 50, 30, 30);
+				
+				// clear rectangle hole from the last
+				context.clearRect(60, 60, 10, 10);
+				
+			})();
+			</script>
+		</div>
+	</body>
+</html>
