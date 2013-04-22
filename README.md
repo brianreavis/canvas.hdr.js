@@ -26,66 +26,66 @@ context.globalBlendMode = HDR2D_BLEND_ADD;
 ```
 
 <table width="100%">
-  <tr>
+	<tr>
 		<th colspan="3">Duff-Porter Modes</th>
 	</tr>
 	<tr>
-		<td valign="top" width="32"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.src.png" alt=""></td>
+		<td valign="top" width="32"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.src.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_SRC</code></td>
 		<td valign="top">The source is copied to the destination. The destination is not used as input.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.dst.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.dst.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_DST</code></td>
 		<td valign="top">The destination is left untouched.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.clear.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.clear.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_CLEAR</code></td>
 		<td valign="top">Both the color and the alpha of the destination are cleared. Neither the source nor the destination are used as input.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.xor.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.xor.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_XOR</code></td>
 		<td valign="top">The part of the source that lies outside of the destination is combined with the part of the destination that lies outside of the source.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.over.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.over.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_OVER</code></td>
 		<td valign="top"><strong>(Default)</strong> The source is composited over the destination.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.in.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.in.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_IN</code></td>
 		<td valign="top">The part of the source lying inside of the destination replaces the destination.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.out.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.out.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_OUT</code></td>
 		<td valign="top">The part of the source lying outside of the destination replaces the destination.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.atop.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.atop.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_ATOP</code></td>
 		<td valign="top">The part of the source lying inside of the destination is composited onto the destination.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.dstover.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.dstover.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_DST_OVER</code></td>
 		<td valign="top">The destination is composited over the source and the result replaces the destination.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.dstin.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.dstin.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_DST_IN</code></td>
 		<td valign="top">The part of the destination lying inside of the source replaces the destination.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.dstout.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.dstout.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_DST_OUT</code></td>
 		<td valign="top">The part of the destination lying outside of the source replaces the destination.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.dstatop.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.dstatop.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_DST_ATOP</code></td>
 		<td valign="top">The part of the destination lying inside of the source is composited over the source and replaces the destination.</td>
 	</tr>
@@ -93,42 +93,42 @@ context.globalBlendMode = HDR2D_BLEND_ADD;
 		<th colspan="3">Other</th>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.add.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.add.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_ADD</code></td>
 		<td valign="top">Brightens the destination color to reflect the source color. Painting with black produces no change.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.subtract.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.subtract.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_SUBTRACT</code></td>
 		<td valign="top">Darkens the destination color to reflect the source color. Painting with white produces no change.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.multiply.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.multiply.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_MULTIPLY</code></td>
 		<td valign="top">Darkens the destination color to reflect the source color. Painting with white produces no change.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.average.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.average.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_AVERAGE</code></td>
 		<td valign="top">Average the source and destination channels and then replace the destination.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.screen.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.screen.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_SCREEN</code></td>
 		<td valign="top">The source and destination are complemented and then multiplied and then replace the destination. The resultant color is always at least as light as either of the two constituent colors.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.softlight.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.softlight.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_SOFTLIGHT</code></td>
 		<td valign="top">Darkens or lightens the colors, dependent on the source color value. If the source color is lighter than 128, the destination is lightened. If the source color is darker than 128, the destination is darkened, as if it were burned in. The degree of darkening or lightening is proportional to the difference between the source color and 128.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.hardlight.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.hardlight.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_HARDLIGHT</code></td>
 		<td valign="top">Multiplies or screens the colors, dependent on the source color value. If the source color is lighter than 128, the destination is lightened as if it were screened. If the source color is darker than 128, the destination is darkened, as if it were multiplied. The degree of lightening or darkening is proportional to the difference between the source color and 128.</td>
 	</tr>
 	<tr>
-		<td valign="top"><img src="//github.com/brianreavis/canvas.hdr.js/raw/master/samples/assets/mode.overlay.png" alt=""></td>
+		<td valign="top"><img src="https://raw.github.com/brianreavis/canvas.hdr.js/master/samples/assets/mode.overlay.png" alt=""></td>
 		<td valign="top"><code>HDR2D_BLEND_OVERLAY</code></td>
 		<td valign="top">Multiplies or screens the colors, dependent on the destination color. Source colors overlay the destination whilst preserving its highlights and shadows.</td>
 	</tr>
